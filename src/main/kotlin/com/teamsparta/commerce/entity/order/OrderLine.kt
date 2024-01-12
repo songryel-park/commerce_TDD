@@ -14,7 +14,7 @@ class OrderLine(
     @JoinColumn(name = "product_id", nullable = false)
     var product: Product,
 
-    @Column(name = "product_amount", nullable = false)
+    @Column(name = "amount", nullable = false)
     var amount: Long
 ) {
     @Id

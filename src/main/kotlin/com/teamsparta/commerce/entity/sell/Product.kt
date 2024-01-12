@@ -22,8 +22,8 @@ class Product(
     @Column(name = "description", nullable = false)
     var description: String,
 
-    @Column(name = "product_amount", nullable = false)
-    var amount: Long
+    @Column(name = "product_stock", nullable = false)
+    var stock: Long
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,10 +33,10 @@ class Product(
         store.addProduct(this)
     }
 
-    fun stockLeft(amount: Long){
-        if (this.amount < amount) {
+    fun stockLeft(stock: Long){
+        if (this.stock < stock) {
             throw BadRequestException("상품 재고가 부족합니다.")
         }
-        this.amount -= amount
+        this.stock -= stock
     }
 }

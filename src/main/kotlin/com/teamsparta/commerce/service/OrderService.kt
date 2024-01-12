@@ -50,7 +50,7 @@ class OrderService(
         return order
     }
 
-    private fun buildOrderList(order: Order, request: OrderRequest, productList: List<Product>): MutableList<OrderLine> {
+    fun buildOrderList(order: Order, request: OrderRequest, productList: List<Product>): MutableList<OrderLine> {
         if (request.productRequestList.size != productList.size) {
             throw BadRequestException("잘못된 상품이 존재합니다.")
         }

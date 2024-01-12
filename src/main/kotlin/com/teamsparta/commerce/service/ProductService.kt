@@ -9,6 +9,7 @@ import com.teamsparta.commerce.exception.NotFoundException
 import com.teamsparta.commerce.repository.ProductRepository
 import com.teamsparta.commerce.repository.StoreRepository
 import com.teamsparta.commerce.repository.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,18 +20,29 @@ class ProductService(
     private val userRepository: UserRepository,
 ) {
     @Transactional
-    fun createProduct(userId: Long, request: ProductRequest): ProductRequest {
+    fun manageProduct(userId: Long, request: ProductRequest): Product {
         val user: User = userRepository.findById(userId)
-            .orElseThrow { NotFoundException("존재하지 않는 계정 입니다.") }
+            .orElseThrow { NotFoundException("존재하지 않는 계정입니다.") }
 
         val store: Store = storeRepository.findById(request.storeId)
-            .orElseThrow { NotFoundException("존재하지 않는 상점 입니다.") }
+            .orElseThrow { NotFoundException("존재하지 않는 상점입니다.") }
 
         checkValidRelation(user, store)
 
-        val newProduct: Product = buildProduct(store, request)
+        return if (request.productId == null) create(request, store) else update(request, store)
+    }
 
-        return productRepository.save(newProduct).toResponse()
+    private fun create(request: ProductRequest, store: Store): Product {
+        val product = buildProduct(request, store)
+        return productRepository.save(product)
+    }
+
+    private fun update(request: ProductRequest, store: Store): Product {
+        val product = productRepository.findById(request.productId!!)
+            .orElseThrow { NotFoundException("존재하지 않는 상품입니다.")}
+        product.update(buildProduct(request, store))
+
+        return productRepository.save(product)
     }
 
     private fun buildProduct(store: Store, request: ProductRequest): Product {

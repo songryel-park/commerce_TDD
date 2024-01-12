@@ -3,6 +3,7 @@ package com.teamsparta.commerce.entity.buy
 import com.teamsparta.commerce.entity.User
 import com.teamsparta.commerce.entity.sell.Product
 import jakarta.persistence.*
+import org.hibernate.validator.internal.constraintvalidators.bv.money.CurrencyValidatorForMonetaryAmount
 
 @Entity
 @Table(name = "cart")
@@ -15,8 +16,8 @@ class Cart(
     @JoinColumn(name = "product_id")
     var product: Product,
 
-    @Column(name = "product_quantity", nullable = false)
-    var quantity: Long
+    @Column(name = "amount", nullable = false)
+    var amount: Long
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
